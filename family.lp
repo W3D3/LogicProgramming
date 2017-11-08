@@ -14,3 +14,5 @@ sibling(X, Y) :- parent(Z, X), parent(Z, Y), X != Y.
 cousin(X, Y) :- parent(Z, X), sibling(Z, O), parent(O, Y).
 uncle(X, Y) :- parent(Z, Y), sibling(X, Z), not parent(X, Y), person(X, m).
 aunt(X, Y) :- parent(Z, Y), sibling(X, Z), not parent(X, Y), person(X, w).
+
+%todo schwiegermutter
