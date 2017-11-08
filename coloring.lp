@@ -1,3 +1,6 @@
+% Trying to color all nodes without 2 neighbor nodes having the same color
+% 8.11.2017
+
 node(a).
 node(b).
 node(c).
