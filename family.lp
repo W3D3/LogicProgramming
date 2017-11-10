@@ -16,3 +16,5 @@ uncle(X, Y) :- parent(Z, Y), sibling(X, Z), not parent(X, Y), person(X, m).
 aunt(X, Y) :- parent(Z, Y), sibling(X, Z), not parent(X, Y), person(X, w).
 
 %todo schwiegermutter
+% X ist schwiegermutter von Y
+schwiegermutter(X, Y) :- wed(Y, Z), parent(X, Z), person(X, w).
