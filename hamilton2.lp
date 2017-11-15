@@ -15,9 +15,10 @@ edge(b, d).
 edge(c, d).
 edge(d, e).
 
-init(a).
+init(A) | not init(A) :- node(A).
+:- init(A), init(B), A != B .% es darf nur 1 startknoten geben
 
-edge(X, Y) :- edge(Y, X).
+edge(X, Y) :- edge(Y, X). %ungerichteter graph
 ham(X, Y) | not ham(X, Y) :- edge(X, Y). %ist drin oder nicht (raten)
 
 :- ham(A, B), ham(A, C), B != C. % beide Edges können nicht im Hamilton graph sein wenn sie an der selben node starten und an 2 orte gehen
@@ -29,3 +30,4 @@ reached(X) :- init(X).
 reached(Y) :- reached(X), ham(X, Y).
 
 #show ham/2.
+#show init/1.
