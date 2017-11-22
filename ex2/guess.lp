@@ -1,3 +1,4 @@
+%hamilton cycle mit weight
 in(X,Y) | out(X,Y) :- edge(X,Y,Z). % edge ist im graph oder nicht
 edge(1,2,1). edge(1,3,2). edge(2,3,1). edge(1,4,3). %fakten
 r(X) :- in(X,_). % erreicht wenn edge drin ist die bei node X anfängt
