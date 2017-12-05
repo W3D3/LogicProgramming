@@ -9,4 +9,4 @@ exam(X) :- seminar(X).
 
 % ∀X(student(X) → [∃Y course(Y ) ∧ visits(X, Y )])
 
-visits(X,llp) | visits(X,ke)| visits(X,algoDat) :- student(X).
+visits(X,llp) | visits(X,ke) | visits(X,algoDat) :- student(X).
