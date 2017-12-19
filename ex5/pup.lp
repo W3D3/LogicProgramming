@@ -1,6 +1,13 @@
-% double-20.dl (20 indicators, 28 sensors)
-iucap(2). % interunit capacity, mit wieviel units ist unit maximal verbunden
-ucap(2). % unit capacity, 2 indikatoren und 2 sensoren maximal
+% (Almost perfectly? :) ) Solution by
+% Bachmann Christof
+% Tscheinig Andreas
+% Wedenig Christoph
+
+% important: set amount of units to MAX(count(sensor), count(indicator)) / 2.
+unit(1..14).
+
+iucap(2). % inter-unit capacity, number of connections a unit can have to other units
+ucap(2). % a maximum of 2 indicators / 2 sensors can be connected to one unit
 
 indicator2sensor(1,1).
 indicator2sensor(1,2).
@@ -59,14 +66,35 @@ indicator2sensor(19,28).
 indicator2sensor(20,19).
 indicator2sensor(20,28).
 
-unit(1..14).
-indicator(I), sensor(S) :- indicator2sensor(I,S).
+% generate sensors and indicators
+sensor(S) :- indicator2sensor(I,S).
+indicator(I) :- indicator2sensor(I,S).
 
+% connect sensor S/indicator I with exactly one unit
 1{sensor2unit(S, U) : unit(U)}1 :- sensor(S).
 1{indicator2unit(I, U) : unit(U)}1 :- indicator(I).
 
-% Unit caps
-:- #count{ S : sensor2unit(S, U), unit(U) } > X, ucap(X).
-%:- #count{ I, indicator2unit(I, U) : unit(U)} > X, ucap(X).
+% limit count of sensors/indicators per unit
+:- #count{ S : sensor2unit(S, U) } > X, ucap(X), unit(U).
+:- #count{ I : indicator2unit(I, U)} > X, ucap(X), unit(U).
+
+%INTERUNIT PART
+% connect every unit with itself
+unit2unit(U,U) :- unit(U), unit(U).
+% connect unit with all other units
+{ unit2unit(U1, U2) : unit(U1) }  :- unit(U2).
+% mirror unit connections
+unit2unit(U1,U2) :- unit2unit(U2, U1).
+
+% limit connected units by iucap (+1 for connection with itself)
+:- #count{ U2 : unit2unit(U, U2) } > (X + 1), iucap(X), unit(U).
+
+% indicator2sensor only valid if sensor is on the same unit than indicator or on connected unit
+valid(I, S) :- indicator2sensor(I, S), indicator2unit(I,U), unit2unit(U, U2), sensor2unit(S, U2).
+
+% failed if there is no valid connection for indicator2sensor
+:- indicator2sensor(I,S), not valid(I, S).
 
 #show sensor2unit/2.
+#show indicator2unit/2.
+#show unit2unit/2.
