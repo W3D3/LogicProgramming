@@ -1,0 +1,1 @@
+pup ohne aggregate und ohne choice rules

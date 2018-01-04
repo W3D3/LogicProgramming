@@ -1,0 +1,1 @@
+%womanAssignsScore(m,w,s)

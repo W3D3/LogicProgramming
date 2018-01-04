@@ -95,6 +95,10 @@ valid(I, S) :- indicator2sensor(I, S), indicator2unit(I,U), unit2unit(U, U2), se
 % failed if there is no valid connection for indicator2sensor
 :- indicator2sensor(I,S), not valid(I, S).
 
+%used(U) :- indicator2unit(I, U).
+%used(U) :- sensor2unit(S, U).
+%#minimize{ 1, X : used(X) }.
+
 #show sensor2unit/2.
 #show indicator2unit/2.
 #show unit2unit/2.
