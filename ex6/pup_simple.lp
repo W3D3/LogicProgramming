@@ -78,32 +78,36 @@ sensor2unit(S, 1) | sensor2unit(S, 2) | sensor2unit(S, 3) | sensor2unit(S, 4) | 
 indicator2unit(I, 1) | indicator2unit(I, 2) | indicator2unit(I, 3) | indicator2unit(I, 4) | indicator2unit(I, 5) | indicator2unit(I, 6) | indicator2unit(I, 7) | indicator2unit(I, 8) | indicator2unit(I, 9) | indicator2unit(I, 10) :- indicator(I).
 
 % limit count of sensors/indicators per unit
-:- #count{ S : sensor2unit(S, U) } > X, ucap(X), unit(U).
-:- #count{ I : indicator2unit(I, U)} > X, ucap(X), unit(U).
+%:- #count{ S : sensor2unit(S, U) } > X, ucap(X), unit(U).
+%:- #count{ I : indicator2unit(I, U)} > X, ucap(X), unit(U).
 
 % limit count of sensors/indicators per unit to 3
-%:- sensor2unit(S1, U), sensor2unit(S2, U), sensor2unit(S3, U), sensor2unit(S4, U), S1 != S2, S1 != S3, S1 != S4, S2 != S3, S2 != S4, S3 != S4.
-%:- indicator2unit(I1, U), indicator2unit(I2, U), indicator2unit(I3, U), indicator2unit(I4, U), I1 != I2, I1 != I3, I1 != I4, I2 != I3, I2 != I4, I3 != I4.
+:- sensor2unit(S1, U), sensor2unit(S2, U), sensor2unit(S3, U), sensor2unit(S4, U), S1 != S2, S1 != S3, S1 != S4, S2 != S3, S2 != S4, S3 != S4.
+:- indicator2unit(I1, U), indicator2unit(I2, U), indicator2unit(I3, U), indicator2unit(I4, U), I1 != I2, I1 != I3, I1 != I4, I2 != I3, I2 != I4, I3 != I4.
 
 %INTERUNIT PART
 % connect every unit with itself
-%unit2unit(U,U) :- unit(U), unit(U).
+unit2unit(U,U) :- unit(U), unit(U).
 % connect unit with all other units
 %{ unit2unit(U1, U2) : unit(U1) }  :- unit(U2).
-unit2unit(U,U), unit2unit(U, U1), unit2unit(U, U2), unit2unit(U, U3) :- unit(U), unit(U1), unit(U2), unit(U3), U1 <> U, U2 <> U, U3 <> U, U1 <> U2, U2 <> U3, U1 <> U3.
+
+unit2unit(A, B) :- sensor2unit(S, A), indicator2unit(I, B), indicator2sensor(I, S).
+
+%unit2unit(U,U), unit2unit(U, U1), unit2unit(U, U2), unit2unit(U, U3) :- unit(U), unit(U1), unit(U2), unit(U3), U1 <> U, U2 <> U, U3 <> U, U1 <> U2, U2 <> U3, U1 <> U3.
 %unit2unit(U,U) | unit2unit(U,U), unit2unit(U, U1) | unit2unit(U,U), unit2unit(U, U1), unit2unit(U, U2) | unit2unit(U,U), unit2unit(U, U1), unit2unit(U, U2), unit2unit(U, U3) :- unit(U),unit(U1),unit(U2),unit(U3), U != U1, U != U2, U != U3, U1 != U2, U1 != U3, U2 != U3.
 
 % mirror unit connections
 unit2unit(U1,U2) :- unit2unit(U2, U1).
 
 % limit connected units by iucap (+1 for connection with itself)
-:- #count{ U2 : unit2unit(U, U2) } > (X + 1), iucap(X), unit(U).
+%:- #count{ U2 : unit2unit(U, U2) } > (X + 1), iucap(X), unit(U).
+:- unit2unit(U1, U), unit2unit(U2, U), unit2unit(U3, U), unit2unit(U4, U), unit2unit(U5, U), U1 != U2, U1 != U3, U1 != U4, U1 != U5, U2 != U3, U2 != U4, U2 != U5, U3 != U4, U3 != U5, U4 != U5.
 
 % indicator2sensor only valid if sensor is on the same unit than indicator or on connected unit
 valid(I, S) :- indicator2sensor(I, S), indicator2unit(I,U), unit2unit(U, U2), sensor2unit(S, U2).
 
 % failed if there is no valid connection for indicator2sensor
-%:- indicator2sensor(I,S), not valid(I, S).
+:- indicator2sensor(I,S), not valid(I, S).
 
 %#show sensor2unit/2.
 %#show indicator2unit/2.
